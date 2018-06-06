@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Puzzle App</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Roboto" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/image-puzzle.css" rel="stylesheet" />
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/image-puzzle.js"></script>
+    <!-- <script src='giphy.html'></script> -->
+    <script src="css/materialize.css"></script>
+    <link rel="stylesheet" href="css/materialize.min.css">
+</head>
+<body>
+  <!--HEADER, SPACE FOR RECOMMENDED LINKS AND INPUT BOX AREA -->  
+ <h1 >Who's Your Fave Artist?</h1>
+ <div id='space'></div>
+ <form>
+    <label for='userInput' id='puzzleInput'>Search! 
+       <input type='text' id='userRequest'>
+       <input type='submit' id='userSubmit'>(ᵕ ᵕ⁎)
+    </label>
+</form>
+
+
+
+ <div id="justinHeader">
+     <h1>Puzzle Tunes</h1>
+  <!--  <img src="http://worldartsme.com/images/puzzled-look-clipart-1.jpg"> -->
+     </div>
+ </div>
+
+<div id="actualVidBox">
+        <iframe width="500" height="500" src="https://www.youtube.com/embed/CYq5Ch-FFcs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+ 
+
+ 
+
+    <div id="collage">
+        <h2>Image Puzzle</h2>
+        <hr />
+        <div id="playPanel" style="padding:5px;display:none;">
+            <h3 id="imgTitle"></h3> <hr />
+            <div style="display:inline-block; margin:auto; width:95%; vertical-align:top;">
+                <ul id="sortable" class="sortable"></ul>
+                <div id="actualImageBox" height="284" width="284px"> <!-- broken image placement -->
+                    <div id="stepBox">
+                        <div>Steps:</div><div class="stepCount">0</div>
+                    </div>
+                    <div id="timeBox">
+                        Time Taken: <span id="timerPanel"></span> secs
+                    </div>
+                    <div id='normalImageArea' height="284" width="284"><img id='normalImage' height="284" width="284"></div>
+             <!--       <img id="actualImage" height="284" width="284"/>  -->  <!-- real image placement-->
+                    <div>Re-arrange blocks until the photos match!</div> 
+              
+                </div>
+            </div>
+        </div>
+        <!-- <div id='normalImageArea'><img id='normalImage'></div>   -->
+         <!--ATTEMPTED TO MAKE SEPERATE CONTAINER FOR UNALTERED PIC-->
+<!--Justin code/experiment-->
+
+
+            <!--END Experiment-->
+            
+        <div id="gameOver" style="display:none;">
+            <div style="background-color: #8e2b2b; padding: 5px 10px 20px 10px; text-align: center; ">
+                <h2 style="text-align:center">Yay!! ╲(｡◕‿◕｡)╱</h2>
+                Play Again? °˖✧◝(⁰▿⁰)◜✧˖°
+                <br />
+                Steps: <span class="stepCount">0</span> steps.
+                <br />
+                Time Taken: <span class="timeCount">0</span> seconds<br />
+                <div>
+                    <button type="button" onclick="window.location.reload(true);">Again!</button>
+                </div>
+            </div>
+        </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+<script>
+
+          var playlistQuery //for grabbing the contents of #userBox
+    
+
+    //take the playlistQuery and grab the contents and attr them to the you tube call
+    function search(){
+        // clear search
+        // $("#userRequest").html("");
+        // $("#userSubmit").html("");
+
+        var userAsked=$("#userRequest").val();
+    }
+    
+    //   function pullPlaylist(){
+        $("#userSubmit").on("click", playlistSearch);
+    
+    function playlistSearch(event){
+        event.preventDefault();
+
+    var playlistId = "";// targeting search query input
+
+    var userAsked=$("#userRequest").val();
+    var queryURL = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + userAsked + "&key=AIzaSyBMcAuwEwiIzf1sPC1KdJ9A6MKC4x9ppj4";
+
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(data) {
+    
+    console.log(data)
+        var videoKind = data.items[0].id.kind;
+        var videoId = data.items[0].id.videoId;
+        var chanId = data.items[0].id.channelId;
+        
+
+        $("#actualVidBox").attr(data.item[0].id)
+    //      $.each(data.items, function(i, items){
+    //    var output = getOutput(items);
+
+             $("#actualImageBox").append(videoId);
+    // })
+        })
+        // $("#actualImageBox").append(output);
+    // // build output
+    // function buildOutput(items){
+    //     var videoId = data.items[0].id.videoId;
+    //     console.log(videoId)
+    // }
+
+  
+    // }
+  
+        
+    }
+
+    //$().push(playlistSearch);
+   
+
+  var tag = document.createElement('script');
+
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '390',
+      width: '640',
+      videoId: 'M7lc1UVf-VE',
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+
+  function onPlayerReady(event) {
+    event.target.playVideo();
+  }
+
+  var done = false;
+  function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING && !done) {
+      setTimeout(stopVideo, 6000);
+      done = true;
+    }
+  }
+  function stopVideo() {
+    player.stopVideo();
+  }
+</script>
+</body>
+</html>
+
+
+
+<!-- <iframe width="1440" height="545" src="https://www.youtube.com/embed/CYq5Ch-FFcs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
